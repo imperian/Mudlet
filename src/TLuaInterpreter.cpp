@@ -2633,7 +2633,8 @@ int TLuaInterpreter::setFontSize(lua_State* L)
         if (mudlet::self()->mConsoleMap.contains(pHost)) {
             // get host profile display font and alter it, since that is how it's done in Settings.
             QFont font = pHost->mDisplayFont;
-            font.setPointSize(size);
+            //font.setPointSize(size);
+            font.setPixelSize( size * 72. / QGuiApplication::primaryScreen()->physicalDotsPerInch());
             pHost->mDisplayFont = font;
             // apply changes to main console and its while-scrolling component too.
             mudlet::self()->mConsoleMap[pHost]->mUpperPane->updateScreenView();
@@ -2674,13 +2675,13 @@ int TLuaInterpreter::getFontSize(lua_State* L)
             windowName = QString::fromUtf8(lua_tostring(L, 1));
 
             if (windowName.isEmpty() || windowName.compare(QStringLiteral("main"), Qt::CaseSensitive) == 0) {
-                rval = pHost->mDisplayFont.pointSize();
+                rval = static_cast<int>(pHost->mDisplayFont.pixelSize() * QGuiApplication::primaryScreen()->physicalDotsPerInch() / 72.);
             } else {
                 rval = mudlet::self()->getFontSize(pHost, windowName);
             }
         }
     } else {
-        rval = pHost->mDisplayFont.pointSize();
+        rval = static_cast<int>(pHost->mDisplayFont.pixelSize() * QGuiApplication::primaryScreen()->physicalDotsPerInch() / 72.);
     }
 
     if (rval <= -1) {
@@ -3273,7 +3274,7 @@ int TLuaInterpreter::calcFontSize(lua_State* L)
     // the only parameter it took in was a font size
     if (lua_gettop(L) == 1 && lua_isnumber(L, 1)) {
         auto fontSize = lua_tonumber(L, 1);
-        auto font = QFont(QStringLiteral("Bitstream Vera Sans Mono"), fontSize, QFont::Normal);
+        auto font = QFontPx(QStringLiteral("Bitstream Vera Sans Mono"), fontSize, QFont::Normal);
 
         auto fontMetrics = QFontMetrics(font);
         size = QSize(fontMetrics.width(QChar('W')), fontMetrics.height());

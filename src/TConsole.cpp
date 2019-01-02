@@ -63,7 +63,7 @@ TConsole::TConsole(Host* pH, bool isDebugConsole, QWidget* parent)
 , mConsoleName("main")
 , mDisplayFontName("Bitstream Vera Sans Mono")
 , mDisplayFontSize(10)
-, mDisplayFont(QFont(mDisplayFontName, mDisplayFontSize, QFont::Normal))
+, mDisplayFont(QFontPx(mDisplayFontName, mDisplayFontSize, QFont::Normal))
 , mFgColor(Qt::black)
 , mIndentCount(0)
 , mIsDebugConsole(isDebugConsole)
@@ -420,19 +420,28 @@ TConsole::TConsole(Host* pH, bool isDebugConsole, QWidget* parent)
     networkLatency->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
 
 
-    QFont latencyFont = QFont("Bitstream Vera Sans Mono", 10, QFont::Normal);
+    QFont latencyFont = QFont();
+    latencyFont.setFamily("Bitstream Vera Sans Mono");
+    latencyFont.setPixelSize( 10 * QGuiApplication::primaryScreen()->physicalDotsPerInch() / 72.);
+    latencyFont.setWeight(QFont::Normal);
     int width;
     int maxWidth = 120;
     width = QFontMetrics(latencyFont).boundingRect(QString("N:0.000 S:0.000")).width();
     if (width < maxWidth) {
         networkLatency->setFont(latencyFont);
     } else {
-        QFont latencyFont2 = QFont("Bitstream Vera Sans Mono", 9, QFont::Normal);
+        QFont latencyFont2 = QFont();
+        latencyFont2.setFamily("Bitstream Vera Sans Mono");
+        latencyFont2.setPixelSize( 9 * QGuiApplication::primaryScreen()->physicalDotsPerInch() / 72.);
+        latencyFont2.setWeight(QFont::Normal);
         width = QFontMetrics(latencyFont2).boundingRect(QString("N:0.000 S:0.000")).width();
         if (width < maxWidth) {
             networkLatency->setFont(latencyFont2);
         } else {
-            QFont latencyFont3 = QFont("Bitstream Vera Sans Mono", 8, QFont::Normal);
+            QFont latencyFont3 = QFont();
+            latencyFont3.setFamily("Bitstream Vera Sans Mono");
+            latencyFont3.setPixelSize( 9 * QGuiApplication::primaryScreen()->physicalDotsPerInch() / 72.);
+            latencyFont3.setWeight(QFont::Normal);
             width = QFontMetrics(latencyFont3).boundingRect(QString("N:0.000 S:0.000")).width();
             networkLatency->setFont(latencyFont3);
         }
@@ -1942,11 +1951,17 @@ bool TConsole::setMiniConsoleFontSize(int size)
 
 void TConsole::refreshMiniConsole() const
 {
-    mUpperPane->mDisplayFont = QFont(mDisplayFontName, mDisplayFontSize, QFont::Normal);
+    mUpperPane->mDisplayFont = QFont();
+    mUpperPane->mDisplayFont.setFamily(mDisplayFontName);
+    mUpperPane->mDisplayFont.setPixelSize( mDisplayFontSize * QGuiApplication::primaryScreen()->physicalDotsPerInch() / 72.);
+    mUpperPane->mDisplayFont.setWeight(QFont::Normal);
     mUpperPane->setFont(mUpperPane->mDisplayFont);
     mUpperPane->updateScreenView();
     mUpperPane->forceUpdate();
-    mLowerPane->mDisplayFont = QFont(mDisplayFontName, mDisplayFontSize, QFont::Normal);
+    mLowerPane->mDisplayFont = QFont();
+    mLowerPane->mDisplayFont.setFamily(mDisplayFontName);
+    mLowerPane->mDisplayFont.setPixelSize( mDisplayFontSize * QGuiApplication::primaryScreen()->physicalDotsPerInch() / 72.);
+    mLowerPane->mDisplayFont.setWeight(QFont::Normal);
     mLowerPane->setFont(mLowerPane->mDisplayFont);
     mLowerPane->updateScreenView();
     mLowerPane->forceUpdate();

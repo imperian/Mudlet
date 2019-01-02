@@ -461,6 +461,7 @@ void dlgConnectionProfiles::slot_save_name()
         } else {
             // code stolen from fillout_form, should be moved to its own function
             QFont font(QStringLiteral("Bitstream Vera Sans Mono"), 1, QFont::Normal);
+            font.setPixelSize( 1 * QGuiApplication::primaryScreen()->physicalDotsPerInch() / 72.);
             // Some uses of QFont have a third argument such as QFont::Helvetica or
             // QFont::Courier but that is not a valid value for that argument - it
             // is a font weight and typically only QFont::Normal or QFont::Bold is
@@ -500,7 +501,10 @@ void dlgConnectionProfiles::slot_save_name()
             for (; fs > 1; fs--) {
                 _pt.eraseRect(QRect(0, 0, 90, 30));
                 _pt.fillRect(QRect(0, 0, 90, 30), QColor(255, 0, 0, 10));
-                _font = QFont(QStringLiteral("DejaVu Sans"), fs, QFont::Normal);
+                _font = QFont();
+                _font.setFamily(QStringLiteral("DejaVu Sans"));
+                _font.setPixelSize( fs * QGuiApplication::primaryScreen()->physicalDotsPerInch() / 72.);
+                _font.setWeight(QFont::Normal);
                 _pt.setFont(_font);
                 QRect _r;
                 if ((i1 + i2 + i3 + i4 + i5 + i6) / 6 < 100) {
@@ -1149,6 +1153,7 @@ void dlgConnectionProfiles::fillout_form()
 
     profiles_tree_widget->setIconSize(QSize(120, 30));
     QFont font(QStringLiteral("Bitstream Vera Sans Mono"), 1, QFont::Normal);
+    font.setPixelSize( 1 * QGuiApplication::primaryScreen()->physicalDotsPerInch() / 72.);
     // This (and setting the font color to white on a white background for an
     // unselected widget) is a hack that minimises - but does not remove the
     // QString assigned as the "name" of the QListWidgetItem in the constructor
@@ -1500,7 +1505,10 @@ void dlgConnectionProfiles::fillout_form()
         for (; fs > 1; fs--) {
             _pt.eraseRect(QRect(0, 0, 90, 30));
             _pt.fillRect(QRect(0, 0, 90, 30), QColor(255, 0, 0, 10));
-            _font = QFont(QStringLiteral("DejaVu Sans"), fs, QFont::Normal);
+            _font = QFont();
+            _font.setFamily(QStringLiteral("DejaVu Sans"));
+            _font.setPixelSize( fs * QGuiApplication::primaryScreen()->physicalDotsPerInch() / 72.);
+            _font.setWeight(QFont::Normal);
             _pt.setFont(_font);
             QRect _r;
             if ((i1 + i2 + i3 + i4 + i5 + i6) / 6 < 100) {

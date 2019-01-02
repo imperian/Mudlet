@@ -45,6 +45,10 @@
 #include "post_guard.h"
 #include <chrono>
 
+#define font_multiplier (QGuiApplication::primaryScreen()->physicalDotsPerInch() / 72.)
+#define width_multiplier font_multiplier
+#define spacing_multiplier ( 1 )
+
 
 TTextEdit::TTextEdit(TConsole* pC, QWidget* pW, TBuffer* pB, Host* pH, bool isDebugConsole, bool isLowerPane)
 : QWidget(pW)
@@ -71,14 +75,18 @@ TTextEdit::TTextEdit(TConsole* pC, QWidget* pW, TBuffer* pB, Host* pH, bool isDe
 {
     mLastClickTimer.start();
     if (!mIsDebugConsole) {
+        mpHost->sDisplayFont = mpHost->mDisplayFont;
+        //mpHost->sDisplayFont.setPixelSize( mpHost->sDisplayFont.pixelSize() * QGuiApplication::primaryScreen()->physicalDotsPerInch() / 72.);
+        mpHost->sDisplayFont.setPixelSize( mpHost->sDisplayFont.pixelSize() * font_multiplier);
         mFontHeight = QFontMetrics(mpHost->mDisplayFont).height();
-        mFontWidth = QFontMetrics(mpHost->mDisplayFont).width(QChar('W'));
+        mFontWidth = width_multiplier *  QFontMetrics(mpHost->mDisplayFont).width(QChar('W'));
         mScreenWidth = 100;
         if ((width() / mFontWidth) < mScreenWidth) {
             mScreenWidth = 100; //width()/mFontWidth;
         }
 
         mpHost->mDisplayFont.setFixedPitch(true);
+        mpHost->sDisplayFont.setFixedPitch(true);
 #if defined(Q_OS_MACOS) || defined(Q_OS_LINUX)
         QPixmap pixmap = QPixmap(mScreenWidth * mFontWidth * 2, mFontHeight * 2);
         QPainter p(&pixmap);
@@ -87,15 +95,20 @@ TTextEdit::TTextEdit(TConsole* pC, QWidget* pW, TBuffer* pB, Host* pH, bool isDe
         QRectF r2;
         const QString t = "1234";
         p.drawText(r, 1, t, &r2);
-        mLetterSpacing = (qreal)((qreal)mFontWidth - (qreal)(r2.width() / t.size()));
+        mLetterSpacing = (qreal)(((qreal)mFontWidth - (qreal)(r2.width() / t.size())) * spacing_multiplier );
+        mpHost->sDisplayFont.setLetterSpacing(QFont::AbsoluteSpacing, mLetterSpacing);
         mpHost->mDisplayFont.setLetterSpacing(QFont::AbsoluteSpacing, mLetterSpacing);
 #endif
-        setFont(mpHost->mDisplayFont);
+        setFont(mpHost->sDisplayFont);
     } else {
         mIsDebugConsole = true;
+        sDisplayFont = mDisplayFont;
+        //sDisplayFont.setPixelSize( sDisplayFont.pixelSize() * QGuiApplication::primaryScreen()->physicalDotsPerInch() / 72.);
+        sDisplayFont.setPixelSize( sDisplayFont.pixelSize() * font_multiplier);
         mFontHeight = QFontMetrics(mDisplayFont).height();
-        mFontWidth = QFontMetrics(mDisplayFont).width(QChar('W'));
+        mFontWidth = width_multiplier *  QFontMetrics(mDisplayFont).width(QChar('W'));
         mScreenWidth = 100;
+        sDisplayFont.setFixedPitch(true);
         mDisplayFont.setFixedPitch(true);
 #if defined(Q_OS_MACOS) || defined(Q_OS_LINUX)
         QPixmap pixmap = QPixmap(mScreenWidth * mFontWidth * 2, mFontHeight * 2);
@@ -105,10 +118,11 @@ TTextEdit::TTextEdit(TConsole* pC, QWidget* pW, TBuffer* pB, Host* pH, bool isDe
         QRectF r2;
         const QString t = "1234";
         p.drawText(r, 1, t, &r2);
-        mLetterSpacing = (qreal)((qreal)mFontWidth - (qreal)(r2.width() / t.size()));
+        mLetterSpacing = (qreal)(((qreal)mFontWidth - (qreal)(r2.width() / t.size())) * spacing_multiplier);
+        sDisplayFont.setLetterSpacing(QFont::AbsoluteSpacing, mLetterSpacing);
         mDisplayFont.setLetterSpacing(QFont::AbsoluteSpacing, mLetterSpacing);
 #endif
-        setFont(mDisplayFont);
+        setFont(sDisplayFont);
         // initialize after mFontHeight and mFontWidth have been set, because the function uses them!
         initDefaultSettings();
     }
@@ -196,6 +210,8 @@ void TTextEdit::initDefaultSettings()
     mFgColor = QColor(192, 192, 192);
     mBgColor = QColor(Qt::black);
     mDisplayFont = QFont("Bitstream Vera Sans Mono", 10, QFont::Normal);
+    sDisplayFont = mDisplayFont;
+    sDisplayFont.setPixelSize( sDisplayFont.pixelSize() * font_multiplier);
 #if defined(Q_OS_MACOS) || defined(Q_OS_LINUX)
     int width = mScreenWidth * mFontWidth * 2;
     int height = mFontHeight * 2;
@@ -209,27 +225,34 @@ void TTextEdit::initDefaultSettings()
         QRectF r2;
         const QString t = "1234";
         p.drawText(r, 1, t, &r2);
-        mLetterSpacing = (qreal)((qreal)mFontWidth - (qreal)(r2.width() / t.size()));
+        mLetterSpacing = (qreal)(((qreal)mFontWidth - (qreal)(r2.width() / t.size())) * spacing_multiplier);
+        sDisplayFont.setLetterSpacing(QFont::AbsoluteSpacing, mLetterSpacing);
         mDisplayFont.setLetterSpacing(QFont::AbsoluteSpacing, mLetterSpacing);
     }
 #endif
+    sDisplayFont.setLetterSpacing(QFont::AbsoluteSpacing, mLetterSpacing);
     mDisplayFont.setLetterSpacing(QFont::AbsoluteSpacing, mLetterSpacing);
+    sDisplayFont.setFixedPitch(true);
     mDisplayFont.setFixedPitch(true);
-    setFont(mDisplayFont);
+    setFont(sDisplayFont);
     mWrapAt = 100;
     mWrapIndentCount = 5;
 }
 
 void TTextEdit::updateScreenView()
 {
+    sDisplayFont = mDisplayFont;
+    //sDisplayFont.setPixelSize( sDisplayFont.pixelSize() * QGuiApplication::primaryScreen()->physicalDotsPerInch() / 72.);
+    sDisplayFont.setPixelSize( sDisplayFont.pixelSize() * font_multiplier);
     if (isHidden()) {
-        mFontWidth = QFontMetrics(mDisplayFont).width(QChar(' '));
+        mFontWidth = width_multiplier *  QFontMetrics(mDisplayFont).width(QChar(' '));
         mFontDescent = QFontMetrics(mDisplayFont).descent();
         mFontAscent = QFontMetrics(mDisplayFont).ascent();
         mFontHeight = mFontAscent + mFontDescent;
 #if defined(Q_OS_MACOS) || defined(Q_OS_LINUX)
         QPixmap pixmap = QPixmap(2000, 600);
         QPainter p(&pixmap);
+        sDisplayFont.setLetterSpacing(QFont::AbsoluteSpacing, 0);
         mDisplayFont.setLetterSpacing(QFont::AbsoluteSpacing, 0);
         if (!p.isActive()) {
             return;
@@ -239,13 +262,14 @@ void TTextEdit::updateScreenView()
         QRectF r2;
         const QString t = "1234";
         p.drawText(r, 1, t, &r2);
-        mLetterSpacing = (qreal)((qreal)mFontWidth - (qreal)(r2.width() / t.size()));
+        mLetterSpacing = (qreal)(((qreal)mFontWidth - (qreal)(r2.width() / t.size())) * spacing_multiplier);
+        sDisplayFont.setLetterSpacing(QFont::AbsoluteSpacing, mLetterSpacing);
         mDisplayFont.setLetterSpacing(QFont::AbsoluteSpacing, mLetterSpacing);
 #endif
         return; //NOTE: das ist wichtig, damit ich keine floating point exception bekomme, wenn mScreenHeight==0, was hier der Fall wäre
     }
     if (!mIsDebugConsole && !mIsMiniConsole) {
-        mFontWidth = QFontMetrics(mpHost->mDisplayFont).width(QChar('W'));
+        mFontWidth = width_multiplier *  QFontMetrics(mpHost->mDisplayFont).width(QChar('W'));
         mFontDescent = QFontMetrics(mpHost->mDisplayFont).descent();
         mFontAscent = QFontMetrics(mpHost->mDisplayFont).ascent();
         mFontHeight = mFontAscent + mFontDescent;
@@ -254,6 +278,7 @@ void TTextEdit::updateScreenView()
 #if defined(Q_OS_MACOS) || defined(Q_OS_LINUX)
         QPixmap pixmap = QPixmap(mScreenWidth * mFontWidth * 2, mFontHeight * 2);
         QPainter p(&pixmap);
+        mpHost->sDisplayFont.setLetterSpacing(QFont::AbsoluteSpacing, 0);
         mpHost->mDisplayFont.setLetterSpacing(QFont::AbsoluteSpacing, 0);
         if (p.isActive()) {
             p.setFont(mpHost->mDisplayFont);
@@ -261,12 +286,13 @@ void TTextEdit::updateScreenView()
             QRectF r2;
             const QString t = "1234";
             p.drawText(r, 1, t, &r2);
-            mLetterSpacing = (qreal)((qreal)mFontWidth - (qreal)(r2.width() / t.size()));
+            mLetterSpacing = (qreal)(((qreal)mFontWidth - (qreal)(r2.width() / t.size())) * spacing_multiplier);
+            mpHost->sDisplayFont.setLetterSpacing(QFont::AbsoluteSpacing, mLetterSpacing);
             mpHost->mDisplayFont.setLetterSpacing(QFont::AbsoluteSpacing, mLetterSpacing);
         }
 #endif
     } else {
-        mFontWidth = QFontMetrics(mDisplayFont).width(QChar('W'));
+        mFontWidth = width_multiplier *  QFontMetrics(mDisplayFont).width(QChar('W'));
         mFontDescent = QFontMetrics(mDisplayFont).descent();
         mFontAscent = QFontMetrics(mDisplayFont).ascent();
         mFontHeight = mFontAscent + mFontDescent;
@@ -278,6 +304,7 @@ void TTextEdit::updateScreenView()
         if (width > 0 && height > 0) {
             QPixmap pixmap = QPixmap(width, height);
             QPainter p(&pixmap);
+            sDisplayFont.setLetterSpacing(QFont::AbsoluteSpacing, 0);
             mDisplayFont.setLetterSpacing(QFont::AbsoluteSpacing, 0);
             if (p.isActive()) {
                 p.setFont(mDisplayFont);
@@ -285,7 +312,8 @@ void TTextEdit::updateScreenView()
                 QRectF r2;
                 const QString t = "1234";
                 p.drawText(r, 1, t, &r2);
-                mLetterSpacing = (qreal)((qreal)mFontWidth - (qreal)(r2.width() / t.size()));
+                mLetterSpacing = (qreal)(((qreal)mFontWidth - (qreal)(r2.width() / t.size())) * spacing_multiplier);
+                sDisplayFont.setLetterSpacing(QFont::AbsoluteSpacing, mLetterSpacing);
                 mDisplayFont.setLetterSpacing(QFont::AbsoluteSpacing, mLetterSpacing);
             }
         }
@@ -654,10 +682,17 @@ void TTextEdit::drawForeground(QPainter& painter, const QRect& r)
     QPainter p(&pixmap);
     p.setCompositionMode(QPainter::CompositionMode_Source);
     if (!mIsDebugConsole && !mIsMiniConsole) {
-        p.setFont(mpHost->mDisplayFont);
+        mpHost->sDisplayFont = mpHost->mDisplayFont;
+        //mpHost->sDisplayFont.setPixelSize( mpHost->sDisplayFont.pixelSize() * QGuiApplication::primaryScreen()->physicalDotsPerInch() / 72.);
+        mpHost->sDisplayFont.setPixelSize( mpHost->sDisplayFont.pixelSize() * font_multiplier);
+        p.setFont(mpHost->sDisplayFont);
         p.setRenderHint(QPainter::TextAntialiasing, !mpHost->mNoAntiAlias);
+        p.setRenderHint(QPainter::SmoothPixmapTransform, !mpHost->mNoAntiAlias);
     } else {
-        p.setFont(mDisplayFont);
+        sDisplayFont = mDisplayFont;
+        //sDisplayFont.setPixelSize( sDisplayFont.pixelSize() * QGuiApplication::primaryScreen()->physicalDotsPerInch() / 72.);
+        sDisplayFont.setPixelSize( sDisplayFont.pixelSize() * font_multiplier);
+        p.setFont(sDisplayFont);
         p.setRenderHint(QPainter::TextAntialiasing, false);
     }
 
@@ -1526,10 +1561,16 @@ std::pair<bool, int> TTextEdit::drawTextForClipboard(QPainter& painter, QRect re
 {
     painter.setCompositionMode(QPainter::CompositionMode_Source);
     if (!mIsDebugConsole && !mIsMiniConsole) {
-        painter.setFont(mpHost->mDisplayFont);
+        mpHost->sDisplayFont = mpHost->mDisplayFont;
+        //mpHost->sDisplayFont.setPixelSize( mpHost->sDisplayFont.pixelSize() * QGuiApplication::primaryScreen()->physicalDotsPerInch() / 72.);
+        mpHost->sDisplayFont.setPixelSize( mpHost->sDisplayFont.pixelSize() * font_multiplier);
+        painter.setFont(mpHost->sDisplayFont);
         painter.setRenderHint(QPainter::TextAntialiasing, !mpHost->mNoAntiAlias);
+        painter.setRenderHint(QPainter::SmoothPixmapTransform, !mpHost->mNoAntiAlias);
     } else {
-        painter.setFont(mDisplayFont);
+        //sDisplayFont = mDisplayFont;
+        //sDisplayFont.setPixelSize( sDisplayFont.pixelSize() * QGuiApplication::primaryScreen()->physicalDotsPerInch() / 72.);
+        painter.setFont(sDisplayFont);
         painter.setRenderHint(QPainter::TextAntialiasing, false);
     }
 

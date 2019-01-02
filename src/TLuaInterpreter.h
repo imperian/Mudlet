@@ -33,6 +33,7 @@
 #include <QProcess>
 #include <QThread>
 #include <QTimer>
+#include <QScreen>
 #include <edbee/texteditorwidget.h>
 #ifdef QT_TEXTTOSPEECH_LIB
 #include <QTextToSpeech>

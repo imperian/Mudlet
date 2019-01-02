@@ -92,6 +92,7 @@ public:
     // position of cursor, in characters, across the entire buffer
     int mCursorY;
     QFont mDisplayFont;
+    QFont sDisplayFont;
     QColor mFgColor;
     int mFontAscent;
     int mFontDescent;

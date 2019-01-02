@@ -35,6 +35,7 @@
 #include "ui_profile_preferences.h"
 #include <QtCore>
 #include <QDialog>
+#include <QScreen>
 #include <QDir>
 #include <QDoubleSpinBox>
 #include <QMap>

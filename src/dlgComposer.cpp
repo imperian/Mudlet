@@ -30,7 +30,10 @@ dlgComposer::dlgComposer(Host* pH) : mpHost(pH)
 
 {
     setupUi(this);
-    QFont f = QFont(QStringLiteral("Bitstream Vera Sans Mono"), 10, QFont::Normal);
+    QFont f = QFont();
+    f.setFamily(QStringLiteral("Bitstream Vera Sans Mono"));
+    f.setPixelSize( 10 * QGuiApplication::primaryScreen()->physicalDotsPerInch() / 72.);
+    f.setWeight(QFont::Normal);
     edit->setFont(f);
     connect(saveButton, &QAbstractButton::pressed, this, &dlgComposer::save);
     connect(cancelButton, &QAbstractButton::pressed, this, &dlgComposer::cancel);

@@ -552,7 +552,8 @@ void T2DMap::addSymbolToPixmapCache(const QString key, const bool gridMode)
     QRectF boundaryRect;
     // Try larger font sizes until it won't fit
     do {
-        fontForThisSymbol.setPointSize(++mSymbolFontSize);
+        //fontForThisSymbol.setPointSize(++mSymbolFontSize);
+        fontForThisSymbol.setPixelSize( (++mSymbolFontSize) * 72. / QApplication::desktop()->physicalDpiX());
         symbolPainter.setFont(fontForThisSymbol);
         boundaryRect = symbolPainter.boundingRect(pixmap->rect(), Qt::AlignCenter, symbolString);
         // Use a limit on mSymbolFontSize otherwise some broken fonts can
@@ -560,7 +561,8 @@ void T2DMap::addSymbolToPixmapCache(const QString key, const bool gridMode)
     } while (testRectangle.contains(boundaryRect) && mSymbolFontSize < 255);
     // Then try smaller ones until it will
     do {
-        fontForThisSymbol.setPointSize(--mSymbolFontSize);
+        //fontForThisSymbol.setPointSize(--mSymbolFontSize);
+        fontForThisSymbol.setPixelSize( (--mSymbolFontSize) * 72. / QApplication::desktop()->physicalDpiX());
         symbolPainter.setFont(fontForThisSymbol);
         boundaryRect = symbolPainter.boundingRect(pixmap->rect(), Qt::AlignCenter, symbolString);
         // Use a limit on mSymbolFontSize otherwise some broken fonts can
@@ -568,7 +570,8 @@ void T2DMap::addSymbolToPixmapCache(const QString key, const bool gridMode)
     } while (!testRectangle.contains(boundaryRect) && mSymbolFontSize > minimumUsableFontSize);
 
     if (testRectangle.contains(boundaryRect)) {
-        fontForThisSymbol.setPointSize(++mSymbolFontSize);
+        //fontForThisSymbol.setPointSize(++mSymbolFontSize);
+        fontForThisSymbol.setPixelSize( (++mSymbolFontSize) * 72. / QApplication::desktop()->physicalDpiX());
         symbolPainter.drawText(pixmap->rect(), Qt::AlignCenter | Qt::TextSingleLine, symbolString);
     }
     // Else, it still doesn't fit, must be a long string, too bad, leave
@@ -637,7 +640,8 @@ void T2DMap::paintEvent(QPaintEvent* e)
         painter.save();
         painter.fillRect(0, 0, width(), height(), Qt::transparent);
         auto font(painter.font());
-        font.setPointSize(10);
+        //font.setPointSize(10);
+        font.setPixelSize( 10 * 72. / QApplication::desktop()->physicalDpiX());
         painter.setFont(font);
         painter.drawText(0, 0, widgetWidth, widgetHeight, Qt::AlignCenter | Qt::TextWordWrap, tr("No map or no valid position."));
         painter.restore();
@@ -2171,7 +2175,8 @@ void T2DMap::paintEvent(QPaintEvent* e)
         painter.setPen(QColor(255, 155, 50));
         QFont _f = painter.font();
         QFont _f2 = _f;
-        _f.setPointSize(12); // 20 was a little large
+        //_f.setPointSize(12); // 20 was a little large
+        _f.setPixelSize( 12 * 72. / QApplication::desktop()->physicalDpiX());
         _f.setBold(true);
         painter.setFont(_f);
         QRect _r = QRect(0, 0, widgetWidth, widgetHeight);

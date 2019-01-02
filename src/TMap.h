@@ -28,6 +28,7 @@
 
 #include "pre_guard.h"
 #include <QApplication>
+#include <QScreen>
 #include <QColor>
 #include <QFont>
 #include <QMap>

@@ -419,7 +419,7 @@ mudlet::mudlet()
     generalRule -= QSize(30, 30);
     mpDebugArea->resize(QSize(800, 600).boundedTo(generalRule));
     mpDebugArea->hide();
-    QFont mainFont = QFont(QStringLiteral("Bitstream Vera Sans Mono"), 8, QFont::Normal);
+    QFont mainFont = QFontPx(QStringLiteral("Bitstream Vera Sans Mono"), 8, QFont::Normal);
     if (mEnableFullScreenMode) {
         showFullScreen();
         QAction* actionFullScreeniew = new QAction(QIcon(QStringLiteral(":/icons/dialog-cancel.png")), tr("Toggle Full Screen View"), this);
@@ -434,7 +434,7 @@ mudlet::mudlet()
     // the tab if it is not the active one and new data has arrived to show in
     // the related profile - make the font size a little larger that the 6 it
     // once was so that it is a bit more obvious when it changes:
-    QFont mdiFont = QFont(QStringLiteral("Bitstream Vera Sans Mono"), 8, QFont::Normal);
+    QFont mdiFont = QFontPx(QStringLiteral("Bitstream Vera Sans Mono"), 8, QFont::Normal);
     setFont(mainFont);
     mainPane->setFont(mainFont);
     mpTabBar->setFont(mdiFont);
@@ -1571,7 +1571,7 @@ int mudlet::getFontSize(Host* pHost, const QString& name)
     QMap<QString, TConsole*>& dockWindowConsoleMap = mHostConsoleMap[pHost];
 
     if (dockWindowConsoleMap.contains(name)) {
-        return dockWindowConsoleMap.value(name)->mUpperPane->mDisplayFont.pointSize();
+        return static_cast<int>(dockWindowConsoleMap.value(name)->mUpperPane->mDisplayFont.pixelSize() * QGuiApplication::primaryScreen()->physicalDotsPerInch() / 72.);
     } else {
         return -1;
     }
@@ -4114,4 +4114,15 @@ void mudlet::setShowIconsOnMenu(const Qt::CheckState state)
 void mudlet::setInterfaceLanguage(const QString& languageCode)
 {
     mInterfaceLanguage = languageCode;
+}
+
+QFont QFontPx(const QString &family, int pointSize = -1, int weight = -1)
+{
+    QFont _font;
+    _font = QFont();
+    _font.setFamily(family);
+    if (pointSize > 0)
+        _font.setPixelSize(pointSize * QGuiApplication::primaryScreen()->physicalDotsPerInch() / 72.);
+    _font.setWeight(weight);
+    return _font;
 }

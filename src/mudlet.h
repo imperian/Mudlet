@@ -596,5 +596,6 @@ protected:
     bool eventFilter(QObject* obj, QEvent* event) override;
 };
 
+QFont QFontPx(const QString&, int, int);
 
 #endif // MUDLET_MUDLET_H

@@ -194,6 +194,7 @@ public:
     QString mDisplayFontName;
     int mDisplayFontSize;
     QFont mDisplayFont;
+    QFont sDisplayFont;
     int mEngineCursor;
     QColor mFgColor;
     TChar mFormatBasic;

@@ -371,7 +371,11 @@ void GLWidget::paintGL()
             glDepthFunc(GL_LESS);
             glClearColor(0.0, 0.0, 0.0, 1.0);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-            renderText(width() / 3, height() / 2, "no map or no valid position on map", QFont("Bitstream Vera Sans Mono", 30, QFont::Normal));
+            QFont _font = QFont();
+            _font.setFamily(QStringLiteral("Bitstream Vera Sans Mono"));
+            _font.setPixelSize( 30 * QGuiApplication::primaryScreen()->physicalDotsPerInch() / 72.);
+            _font.setWeight(QFont::Normal);
+            renderText(width() / 3, height() / 2, "no map or no valid position on map", _font);
 
             glLoadIdentity();
             glFlush();

@@ -32,6 +32,7 @@
 #include <QString>
 #include <QTreeWidget>
 #include <QWidget>
+#include <QScreen>
 #include "post_guard.h"
 
 class Host;
