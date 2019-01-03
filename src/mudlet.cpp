@@ -4122,7 +4122,12 @@ QFont QFontPx(const QString &family, int pointSize = -1, int weight = -1)
     _font = QFont();
     _font.setFamily(family);
     if (pointSize > 0)
-        _font.setPixelSize(pointSize * QGuiApplication::primaryScreen()->physicalDotsPerInch() / 72.);
+        _font.setPixelSize(pointsToPixels(pointSize));
     _font.setWeight(weight);
     return _font;
+}
+
+int pointsToPixels(int pointSize)
+{
+    return pointSize * QGuiApplication::primaryScreen()->physicalDotsPerInch() / 72;
 }

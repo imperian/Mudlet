@@ -92,7 +92,6 @@ public:
     // position of cursor, in characters, across the entire buffer
     int mCursorY;
     QFont mDisplayFont;
-    QFont sDisplayFont;
     QColor mFgColor;
     int mFontAscent;
     int mFontDescent;
@@ -164,7 +163,7 @@ private:
     // screen height in characters
     int mScreenHeight;
     // currently viewed screen area
-    QPixmap mScreenMap;
+    QImage mScreenMap;
     int mScreenWidth;
     QTime mLastClickTimer;
     QPointer<QAction> mpContextMenuAnalyser;

@@ -24,6 +24,7 @@
 
 
 #include "pre_guard.h"
+#include "mudlet.h"
 #include <QtOpenGL/qgl.h> //problem with git
 #include <QPointer>
 #include "post_guard.h"

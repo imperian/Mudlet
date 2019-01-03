@@ -2633,8 +2633,7 @@ int TLuaInterpreter::setFontSize(lua_State* L)
         if (mudlet::self()->mConsoleMap.contains(pHost)) {
             // get host profile display font and alter it, since that is how it's done in Settings.
             QFont font = pHost->mDisplayFont;
-            //font.setPointSize(size);
-            font.setPixelSize( size * 72. / QGuiApplication::primaryScreen()->physicalDotsPerInch());
+            font.setPointSize(size);
             pHost->mDisplayFont = font;
             // apply changes to main console and its while-scrolling component too.
             mudlet::self()->mConsoleMap[pHost]->mUpperPane->updateScreenView();
@@ -2675,13 +2674,13 @@ int TLuaInterpreter::getFontSize(lua_State* L)
             windowName = QString::fromUtf8(lua_tostring(L, 1));
 
             if (windowName.isEmpty() || windowName.compare(QStringLiteral("main"), Qt::CaseSensitive) == 0) {
-                rval = static_cast<int>(pHost->mDisplayFont.pixelSize() * QGuiApplication::primaryScreen()->physicalDotsPerInch() / 72.);
+                rval = pHost->mDisplayFont.pointSize();
             } else {
                 rval = mudlet::self()->getFontSize(pHost, windowName);
             }
         }
     } else {
-        rval = static_cast<int>(pHost->mDisplayFont.pixelSize() * QGuiApplication::primaryScreen()->physicalDotsPerInch() / 72.);
+        rval = pHost->mDisplayFont.pointSize();
     }
 
     if (rval <= -1) {

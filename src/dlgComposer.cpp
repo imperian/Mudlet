@@ -32,7 +32,7 @@ dlgComposer::dlgComposer(Host* pH) : mpHost(pH)
     setupUi(this);
     QFont f = QFont();
     f.setFamily(QStringLiteral("Bitstream Vera Sans Mono"));
-    f.setPixelSize( 10 * QGuiApplication::primaryScreen()->physicalDotsPerInch() / 72.);
+    f.setPixelSize( pointsToPixels(10));
     f.setWeight(QFont::Normal);
     edit->setFont(f);
     connect(saveButton, &QAbstractButton::pressed, this, &dlgComposer::save);

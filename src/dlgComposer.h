@@ -24,6 +24,7 @@
 
 #include "pre_guard.h"
 #include "ui_composer.h"
+#include "mudlet.h"
 #include <QPointer>
 #include "post_guard.h"
 

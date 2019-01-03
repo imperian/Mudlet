@@ -49,7 +49,7 @@ dlgAboutDialog::dlgAboutDialog(QWidget* parent) : QDialog(parent)
         bool isWithinSpace = false;
         while (!isWithinSpace) {
             QFont font(QStringLiteral("DejaVu Serif"), fontSize, QFont::Bold | QFont::Serif | QFont::PreferMatch | QFont::PreferAntialias);
-            font.setPixelSize( 16 * QGuiApplication::primaryScreen()->physicalDotsPerInch() / 72.);
+            font.setPixelSize( pointsToPixels(16));
             QTextLayout versionTextLayout(sourceVersionText, font, painter.device());
             versionTextLayout.beginLayout();
             // Start work in this text item
@@ -85,7 +85,7 @@ dlgAboutDialog::dlgAboutDialog(QWidget* parent) : QDialog(parent)
         // PLACEMARKER: Date-stamp needing annual update
         QString sourceCopyrightText = QStringLiteral("©️ Mudlet makers 2008-2018");
         QFont font(QStringLiteral("DejaVu Serif"), 16, QFont::Bold | QFont::Serif | QFont::PreferMatch | QFont::PreferAntialias);
-        font.setPixelSize( 16 * QGuiApplication::primaryScreen()->physicalDotsPerInch() / 72.);
+        font.setPixelSize( pointsToPixels(16) );
         QTextLayout copyrightTextLayout(sourceCopyrightText, font, painter.device());
         copyrightTextLayout.beginLayout();
         QTextLine copyrightTextline = copyrightTextLayout.createLine();

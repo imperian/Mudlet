@@ -597,5 +597,6 @@ protected:
 };
 
 QFont QFontPx(const QString&, int, int);
+int pointsToPixels(int pointSize);
 
 #endif // MUDLET_MUDLET_H

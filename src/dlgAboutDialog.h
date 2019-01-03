@@ -23,6 +23,7 @@
 
 
 #include "pre_guard.h"
+#include "mudlet.h"
 #include "ui_about_dialog.h"
 #include <QScreen>
 #include "post_guard.h"

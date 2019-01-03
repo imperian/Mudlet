@@ -479,7 +479,7 @@ void dlgProfilePreferences::initWithHost(Host* pHost)
     need_reconnect_for_specialoption->hide();
 
     fontComboBox->setCurrentFont(pHost->mDisplayFont);
-    mFontSize = static_cast<int>(pHost->mDisplayFont.pixelSize() * QGuiApplication::primaryScreen()->physicalDotsPerInch() / 72.);
+    mFontSize = pHost->mDisplayFont.pointSize();
     if (mFontSize < 0) {
         mFontSize = 10;
     }
@@ -1281,7 +1281,7 @@ void dlgProfilePreferences::setDisplayFont()
         return;
     }
     QFont font = fontComboBox->currentFont();
-    font.setPixelSize(mFontSize * 72. / QGuiApplication::primaryScreen()->physicalDotsPerInch());
+    font.setPointSize(mFontSize);
     if (pHost->mDisplayFont != font) {
         pHost->mDisplayFont = font;
         if (mudlet::self()->mConsoleMap.contains(pHost)) {
@@ -2742,10 +2742,10 @@ void dlgProfilePreferences::generateMapGlyphDisplay()
 
 
     QFont selectedFont = mpHost->mpMap->mMapSymbolFont;
-    selectedFont.setPixelSize(16 * 72. / QGuiApplication::primaryScreen()->physicalDotsPerInch());
+    selectedFont.setPointSize(16);
     selectedFont.setStyleStrategy(static_cast<QFont::StyleStrategy>(mpHost->mpMap->mMapSymbolFont.styleStrategy() | QFont::NoFontMerging));
     QFont anyFont = mpHost->mpMap->mMapSymbolFont;
-    anyFont.setPixelSize(16 * 72. / QGuiApplication::primaryScreen()->physicalDotsPerInch());
+    anyFont.setPointSize(16);
     anyFont.setStyleStrategy(static_cast<QFont::StyleStrategy>(mpHost->mpMap->mMapSymbolFont.styleStrategy() & ~(QFont::NoFontMerging)));
 
     int row = -1;
@@ -3025,10 +3025,10 @@ void dlgProfilePreferences::slot_setMapSymbolFont(const QFont & font)
         return;
     }
 
-    int pixelSize = pHost->mpMap->mMapSymbolFont.pixelSize();
+    int pointSize = pHost->mpMap->mMapSymbolFont.pointSize();
     if (pHost->mpMap->mMapSymbolFont != font) {
         pHost->mpMap->mMapSymbolFont = font;
-        pHost->mpMap->mMapSymbolFont.setPixelSize(pixelSize);
+        pHost->mpMap->mMapSymbolFont.setPointSize(pointSize);
         // Clear the existing cache of room symbol pixmaps:
         pHost->mpMap->mpMapper->mp2dMap->flushSymbolPixmapCache();
         pHost->mpMap->mpMapper->mp2dMap->repaint();

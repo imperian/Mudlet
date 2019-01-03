@@ -1907,7 +1907,7 @@ int TMap::createMapLabel(int area, QString text, float x, float y, float z, QCol
     lpen.setColor(label.fgColor);
     QFont font;
     //font.setPointSize(fontSize); //good: font size = 50, zoom = 30.0
-    font.setPixelSize( fontSize * 72. / QGuiApplication::primaryScreen()->physicalDotsPerInch());
+    font.setPixelSize( pointsToPixels(fontSize));
     lp.setRenderHint(QPainter::TextAntialiasing, true);
     lp.setPen(lpen);
     lp.setFont(font);
